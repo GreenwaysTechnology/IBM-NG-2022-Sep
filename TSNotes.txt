@@ -323,43 +323,727 @@ E:\session\IBM\2022\may\ng-session\ts-apps> npm run compile
 </body>
 .....................................................................................
 
+.....................................................................................	              	 Typescript language fundamentals
+
+
+How to declare variables and how to use data types?
+
+Java script is dynamic and weakly typed language, data types are not necessary during declaration
+
+
+var or let or const variableName:datatype = value(literals)
+
+Types :
+ number
+ string
+ boolean
+ ..
+reference types
+array  
+
+other types;
+ void
+ undefined
+ any
+ unknown
+ function
+ enum
 
 
 
+eg:
+
+//declare variables :
+
+//string - "" ,'',``(backtick)
+let firstName: string = "Subramanian"
+let lastName: string = 'Murugan'
+//concatnation : +
+console.log("Name " + firstName + lastName)
+//concatnation : ,
+console.log("Name ", firstName, lastName)
+//using back tick and tempatle literal syntax `${variableName}` - pure es 6 syntax
+console.log(`Name ${firstName}    ${lastName}`)
+//use case of backtick notation.
+//multi line strings - in old javascript
+let doc: string = "<html>" +
+    "<head>" +
+    "<title>Hello</title" +
+    "</head>"
+
+console.log(doc)
+//multi line strings using backtick notation.
+let title: string = 'Angular in Action'
+let newDoc: string = `
+  <html>
+    <head>
+       <title>IBM Home Page </title>
+   </head>
+   <body>
+         <p>${title}</p>
+   </body>
+   </html>
+`
+console.log(newDoc)
+
+
+//numbers
+let qty: number = 100
+let price: number = 9000
+let totalPrice = qty * price
+console.log(`Total Price ${totalPrice}`)
+...............................................................................
+//boolean
+let isActive:boolean = true 
+let isEnabled:boolean =false 
+
+console.log(`isActive ${isActive}  is Enabled ${isEnabled}`)
+...................................................................................
+			 undefined
+
+Variable is declared but no value is assigned.
+
+//
+let salary:undefined;
+console.log(`Salary ${salary}`)
+...................................................................................
+			Compile time errors
+....................................................................................
+
+
+let a: number = 100
+console.log(` A is ${a}`)
+
+//reinitalization
+a =900
+console.log(` A is ${a}`)
+
+//assign wrong type...
+/**
+ * src/index.ts:10:1 - error TS2322: Type 'string' is not assignable to type 'number'.
+
+10 a="Hello"
+   ~
+
+ */
+a="Hello"
+
+console.log(` A is ${a}`)
+
+By default type script compiler generates compile time error,still you will get output.
+
+what if i dont want to run the program if there is error.
+
+tsconfig.json
+{
+    "compilerOptions": {
+        "outDir": "build",
+        "watch": true,
+        "noEmitOnError": true
+    },
+    "exclude": [
+        "node_modules"
+    ],
+    "files": [
+        "src/index.ts"
+    ]
+}
+
+"noEmitOnError": true
+
+Type inference:
+//without type can we variable
+
+//Type inference : without expclit variable declaration, we can declare variable
+//type of variable is dermineded once the value is assinged, in future assigment, based on the value type, will be taken
+let firstName = 'Subramanian'
+console.log(firstName)
+firstName = 'foo'
+//firstName =200
+
+//type inference and undefined
+
+//here no value and no explicit type
+//undefined and type interference
+let myvar;
+console.log(myvar)
+myvar =100;
+console.log(myvar)
+myvar ="Hello"
+console.log(myvar)
+
+
+any:
+ if variable is declared without any explicit type. you can use any 
+ which is recommended
+
+//any the variable can  hold any type of value
+let myvar:any;
+console.log(myvar)
+myvar =100;
+console.log(myvar)
+myvar ="Hello"
+console.log(myvar)
+.....................................................................................
+  				   null
+
+null:
+.....
+ It is similar to undefined. No valid literal is assigned. No valid Object literal is assigned.
+null itself object , but no value is present.
+
+In javascript apps, null means that variable is going to hold object in future assignements.
 
 
 
+Literals:
+
+1.number
+2.string
+3.boolean
+4.undefined
+5.NaN
+6.infinity
+7.null
+8.function
+9.object
+
+NaN:
+//NaN - Not a number ; it is one of the runtime error.
+//NaN you will get when a variable is having undefined , if you do computation- numerical computation
+
+let a = 10;
+let b;
+let c = a * b;
+console.log(`a ${a} b ${b} c ${c} `)
 
 
+infinity:
+ div/0
+//infinity
+let a =100;
+let b =0
+let c = a / b 
+console.log(`c ${c}`)
+.....................................................................................
+				Advanced boolean
 
 
+in js (ts) is every thing true, execept the following values
+
+1.boolean false
+2.0
+3.empty string
+4.undefined
+5.NaN
+6.null
+
+//
+let myvar: undefined
+
+if (myvar) {
+    console.log('valid')
+} else {
+    console.log('invalid')
+}
+
+let b
+let a = 100 * b
+console.log(a)
+if (a) {
+    console.log('valid')
+} else {
+    console.log('invalid')
+}
+
+let start = 0;
+if (start) {
+    console.log('valid')
+} else {
+    console.log('invalid')
+}
+
+let foo = null
+if (start) {
+    console.log('valid')
+} else {
+    console.log('invalid')
+}
+.....................................................................................
+				functions
+.....................................................................................
+//functions
+
+function sayHello() {
+    console.log('Hello')
+}
+sayHello()
+
+//functions with args and parameter
+
+function add(a: number, b: number) {
+    let c = a + b
+    console.log(c)
+}
+add(10, 10)
+//add("hello", "subramanian")
+
+//return value
+function addV1(a: number, b: number): number {
+    let c = a + b
+    //console.log(c)
+    return c
+}
+addV1(10, 10)
+
+//what if i dont supply value: default value or optional operator
+
+//default args : es 6 feature
+function multiply(a: number = 0, b: number = 0):number {
+    return a * b
+}
+console.log(multiply(10, 10))
+console.log(multiply())
+
+//optional parameter : no values are supplied but still we can skip
+function div(a?: number, b?: number):number {
+     return a / b  
+}
+console.log(div(10, 10))
+console.log(div())
+
+.....................................................................................
+//function as literal : function can be stored into a variable, that variable can be used to invoke that function.
+
+//es 5 style of function literal
+
+let sayHai = function (name = 'subramanian') {
+    return `Hello ${name}`
+}
+console.log(sayHai())
+
+//es 6 style of function literal - arrow functions
+
+let add = (a: number = 0, b: number = 0): number => {
+    return a * b
+}
+
+console.log(add(12, 56))
+
+//if function having only return statement: remove return and {}
+add = (a: number = 0, b: number = 0): number => a * b
+console.log(add(12, 56))
+.....................................................................................
+			  	Union Type
+.....................................................................................
+
+A variable can hold more than one data type.
+
+let  a : number | string 
+
+a=100
+a="100"
+
+a =true -false
+
+//union type
+
+let myvar: number | string;
+myvar = 100;
+myvar = "900"
+// myvar =true
+
+let gender: "Male" | "Female" | "Third"
+
+gender = "Male"
+gender = "Female"
+//gender="foo"
+
+let windowStatus: "Open" | "Close"
+windowStatus = "Open"
+function Mode(varient: "dark" | "light") {
+    console.log(varient)
+}
+Mode("dark")
+Mode("light")
+// Mode("theme")
+
+function Person(gender: "Male" | "Female" | "Third" | undefined, active: true | false) {
+    console.log(gender, active)
+}
+Person("Female", true)
+Person("Male", false)
+
+// function PrintId(id: string | number | undefined) {
+//     console.log(id)
+// }
+// PrintId("1");
+// PrintId(1);
+// PrintId(undefined)
+
+function PrintId(id: string | number | undefined) {
+    //console.log(id.toUpperCase())
+    if (typeof id === "string") {
+        // In this branch, id is of type 'string'
+        console.log(id.toUpperCase());
+    } else if (typeof id === "number") {
+        // Here, id is of type 'number'
+        console.log(id.toFixed());
+    } else {
+        console.log(id)
+    }
+}
+PrintId("abc");
+PrintId(1);
+PrintId(undefined)
+.....................................................................................
+                    .............................................................................................
+				Object oriented Programming In TS
+.....................................................................................
+class declaration
+  instance variables , methods
+  constructors and parameters
+  create instance
 
 
+simple class declartion:
+//class declaration
+
+class Employee {
+    //variables: instance variables
+    id: number = 1
+    name: string = "subramanian"
+    status: boolean = true
+
+    //methods:instance methods
+    calculate(value: number=0): number {
+        return 100 * value
+    }
+}
+//emp is reference variable
+//new is operator
+//Employee() is constructor call
+let emp = new Employee();
+console.log(`id ${emp.id} name ${emp.name} Status ${emp.status} value ${emp.calculate(12)}`)
 
 
+....
+
+//state initalization
+/**
+ * 1.inside class
+ * 2.outside class using reference variable
+ * 3.via constructor
+ */
+
+//inside class
+class Employee {
+    //variables: instance variables
+    id: number = 1
+    name: string = "subramanian"
+    status: boolean = true
+
+    //methods:instance methods
+    calculate(value: number=0): number {
+        return 100 * value
+    }
+}
+//emp is reference variable
+//new is operator
+//Employee() is constructor call
+let emp = new Employee();
+console.log(`id ${emp.id} name ${emp.name} Status ${emp.status} value ${emp.calculate(12)}`)
+
+.....
+
+//state initalization
+/**
+ * 1.inside class
+ * 2.outside class using reference variable
+ * 3.via constructor
+ */
+
+//inside class
+class Employee {
+    //variables: instance variables
+    id: number = 1
+    name: string = "subramanian"
+    status: boolean = true
+
+    //methods:instance methods
+    calculate(value: number=0): number {
+        return 100 * value
+    }
+}
+//emp is reference variable
+//new is operator
+//Employee() is constructor call
+let emp = new Employee();
+//state init
+emp.id =900;
+emp.name ='ram'
+console.log(`id ${emp.id} name ${emp.name} Status ${emp.status} value ${emp.calculate(12)}`)
+................
+constructor - initalization
+//state initalization
+/**
+ * 1.inside class
+ * 2.outside class using reference variable
+ * 3.via constructor
+ */
+
+//inside class
+class Employee {
+    //variables: instance variables
+    id: number
+    name: string
+    status: boolean
+
+    //constructor args :which can be default or optional
+    constructor(id: number = 1, name: string = 'subramaian', status: boolean = false) {
+        this.id = id;
+        this.name = name;
+        this.status = status
+    }
+
+    //methods:instance methods
+    calculate(value: number = 0): number {
+        return 100 * value
+    }
+}
+//emp is reference variable
+//new is operator
+//Employee() is constructor call
+let emp = new Employee();
+//state init
+emp.id = 900;
+emp.name = 'ram'
+console.log(`id ${emp.id} name ${emp.name} Status ${emp.status} value ${emp.calculate(12)}`)
+.....................................................................................
+//state initalization
+/**
+ * 1.inside class
+ * 2.outside class using reference variable
+ * 3.via constructor
+ */
+
+//inside class
+class Employee {
+    //variables: instance variables
+    id: number
+    name: string
+    status: boolean
+
+    //constructor args :which can be default or optional
+    constructor(id: number = 1, name: string = 'subramaian', status: boolean = false) {
+        this.id = id;
+        this.name = name;
+        this.status = status
+    }
+
+    //methods:instance methods
+    calculate(value: number = 0): number {
+        return 100 * value
+    }
+}
+//emp is reference variable
+//new is operator
+//Employee() is constructor call
+let emp = new Employee();
+console.log(`id ${emp.id} name ${emp.name} Status ${emp.status} value ${emp.calculate(12)}`)
+
+emp = new Employee(34,'karthik',true);
+
+console.log(`id ${emp.id} name ${emp.name} Status ${emp.status} value ${emp.calculate(12)}`)
+.....................................................................................
+				Dependency injection: Constructor args
+.....................................................................................
+
+Hiearchy :
+ HAS-A hiearchy - dependency injection.
+ IS-A hierachy -  inheritance
 
 
+HAS-A :
+//classes are depending on each other 
+
+class EmployeeService {
+    constructor() {
+
+    }
+    findAll(): string {
+        return 'Employee Service'
+    }
+    save(emplyee: string) {
+        console.log(emplyee)
+        return 'saved'
+    }
+}
+
+class EmployeeController {
+    //type of empService is EmployeeService
+    //has-a /dependency
+    empService: EmployeeService
+    constructor(empService: EmployeeService) {
+        this.empService = empService
+    }
+
+    findAll() {
+        return this.empService.findAll()
+    }
+}
+
+//link objects
+
+let empService = new EmployeeService()
+//constructor injector
+let empCtrl = new EmployeeController(empService)
+
+console.log(empCtrl.findAll())
+
+//constructor injector
+let empCtrl1 = new EmployeeController(new EmployeeService())
+console.log(empCtrl1.findAll())
+....................................................................................					Inheritance
+
+1.class inheritance - es 6 feature
+2.interface inheritance -ts feature
+3.abstract class inheritance -ts feature
 
 
+class based inheritance:
+//base class
+
+class Account {
+    constructor(){
+        console.log('Account class')
+    }
+}
+class SavingsAccount extends Account{
+    constructor(){
+        super()
+        console.log('SavingsAccount class')
+    }
+}
+let sb = new SavingsAccount()
+
+.....
+//base class
+
+class Account {
+    constructor(){
+        console.log('Account class')
+    }
+    //
+    deposit(){
+        return 10
+    }
+}
+class SavingsAccount extends Account{
+    constructor(){
+        super()
+        console.log('SavingsAccount class')
+    }
+    //overriding
+    deposit(){
+        return 110 * super.deposit()
+    }
+}
+let sb = new SavingsAccount()
+console.log(sb.deposit())
+....................................................................................
+			  interfaces
+
+1.inspired from java,c# - to have common behaviours for different class heriachy
+
+//interface
+
+interface Fly {
+    fly(): string
+}
+class Airplane implements Fly {
+    fly(): string {
+        return "AirPlane"
+    }
+}
+
+let airPlane= new Airplane()
+console.log(airPlane.fly())
+................................................................................
+			 Abstract class
+..................................................................................
+
+//abstract class 
+
+abstract class Animal {
+    abstract eat(): string
+    saveAnimals(): void {
+        console.log('Save animals from the hunter')
+    }
+}
+class Tiger extends Animal {
+    eat(): string {
+        return 'tiger hunts other animals'
+    }
+}
+let tiger = new Tiger()
+console.log(tiger.eat())
+tiger.saveAnimals()
+....................................................................................
+			   Encapsultion
+.....................................................................................
+
+This is supported by ts 
+
+private,public,protected
+
+private within class
+public outside class - default behaviour
+protected - base and dervied class.
 
 
+private:
+//private instance variables and methods
+
+class Secret {
+    private password:string ='Abc123'
+
+    private generatePassword():string {
+        return this.password + Math.random()
+    }
+}
+let auth = new Secret()
+// console.log(auth.password)
+//  console.log(auth.generatePassword())
 
 
+public :
+
+class Employee {
+    //by default public
+    public id: number = 10
+
+    public calculate(): number {
+        return 100
+    }
+
+}
+
+let emp = new Employee()
+console.log(emp.id, emp.calculate())
+.....................................................................................
 
 
+				Variables Types
 
 
-
-
-
-
-
-
-
-
-
-
-
+1.instance variable
+  variable declared inside class
+2.static variables
+  variables delcared inside class with static modifier
+3.local variables
+  variables are declared inside method(including constructor)
+  or method args / constructor args
 
 
 

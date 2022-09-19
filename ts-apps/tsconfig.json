@@ -2,6 +2,7 @@
     "compilerOptions": {
         "outDir": "build",
         "watch": true,
+        "noEmitOnError": true
     },
     "exclude": [
         "node_modules"
