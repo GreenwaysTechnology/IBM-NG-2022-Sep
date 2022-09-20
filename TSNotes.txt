@@ -406,6 +406,14 @@ Variable is declared but no value is assigned.
 //
 let salary:undefined;
 console.log(`Salary ${salary}`)
+
+let a;
+ a => undefined
+a=10
+
+let b:undefined =undefined
+
+
 ...................................................................................
 			Compile time errors
 ....................................................................................
@@ -1033,9 +1041,7 @@ let emp = new Employee()
 console.log(emp.id, emp.calculate())
 .....................................................................................
 
-
 				Variables Types
-
 
 1.instance variable
   variable declared inside class
@@ -1044,6 +1050,392 @@ console.log(emp.id, emp.calculate())
 3.local variables
   variables are declared inside method(including constructor)
   or method args / constructor args
+
+
+1.instance variables:
+
+class Employee {
+ public | private | protected id:number; //instance variable
+}
+variables are declared inside class
+
+
+2.static variables
+
+
+
+//static variables
+class ErrorMessage {
+    static SERVER_ERROR:string = 'Server error';
+    static INVALID_TOKEN = 'Token is invalid';
+    static TOKEN_NOTFOUND = 'Token Not supplied';
+}
+
+//read static variables
+console.log(ErrorMessage.SERVER_ERROR)
+console.log(ErrorMessage.INVALID_TOKEN)
+console.log(ErrorMessage.TOKEN_NOTFOUND)
+
+
+
+
+
+3.local variables
+ variables are declared inside method(including constructor)
+  or method args / constructor args.
+var| let | const 
+
+ class Demo { 
+
+   //
+    constructor(myvar:string){}
+    doStuff(){
+      let a=10;//local variables
+    }
+    sayHai(name:string="hello" //localvariable){
+
+    }
+ }
+..................................................................................
+			public and private keywords
+			  for code reduction
+
+
+// class Customer {
+//     //instance variables
+//     public id: number
+//     public name: string
+//     public status: boolean
+//     //constructor args are local variables
+//     constructor(id: number = 1, name: string = '', status: boolean = false) {
+//         this.id = id
+//         this.name = name
+//         this.status = status
+//     }
+// }
+
+
+// class Customer {
+//     //instance variables
+//     id: number
+//     name: string
+//     status: boolean
+//     //constructor args are local variables
+//     constructor(id: number = 1, name: string = '', status: boolean = false) {
+//         this.id = id
+//         this.name = name
+//         this.status = status
+//     }
+// }
+
+//reduce code by removing instance variables from the class declaration
+//we have to convert local variables(constructor args) into instance variables
+//we can convert constructor args variables into instance variable by adding "private or public keyword"
+// class Customer {
+//     //constructor args are local variables
+//     constructor(public id: number = 1, public name: string = '', public status: boolean = false) {
+//         this.id = id
+//         this.name = name
+//         this.status = status
+//     }
+// }
+
+//remove variable initalization code inside constructor because variables left side and right side both are same.
+class Customer {
+    //constructor args are local variables
+    constructor(public id: number = 1, public name: string = '', public status: boolean = false) { }
+}
+
+let cust = new Customer(12, 'Subramanian', true)
+console.log(cust)
+..........................**************............................................
+			Dependency injection and private ,public keywords
+...................................................................................
+
+
+class Logger {
+    constructor() {
+
+    }
+    log(message: string) {
+        console.log(message)
+    }
+}
+
+class UserService {
+    constructor(private logger: Logger) { }
+    findAll() {
+        this.logger.log('fetch users')
+        return 'Users'
+    }
+}
+class UserController {
+    // private userService: UserService
+    constructor(private userService: UserService) {// this.userService = userService
+    }
+    init() {
+        console.log(this.userService.findAll())
+    }
+}
+let usrCtrl = new UserController(new UserService(new Logger()))
+usrCtrl.init()
+
+..................................................................................
+				 Object types
+...............................................................................
+
+1.class as type
+2.interface as type
+3.type keyword as type
+
+For literal objects, how to enforce type safty for literal objects.
+
+//class as type 
+
+class Product {
+    //required fields and optional fields
+    id: number
+    //optional properties
+    name?: string
+    qty?: number
+    inStock?: boolean
+    category?: "Food" | "Electronics" | "Others"
+
+}
+
+//literal objects
+// let product: Product = {
+//     id: "1,",
+//     name: 'Phone',
+//     qty: 100,
+//     inStock: true
+// }
+let product: Product = {
+    id: 1,
+    name: 'Phone',
+    qty: 100,
+    inStock: true
+}
+//here we have only two properties, still ts compiler gives error, ts compiler looks all properties from the type class must present in the object defintion
+let newProduct: Product = {
+    id: 1,
+    inStock: false,
+    category:"Electronics"
+}
+
+interface as type
+
+//class as type 
+
+interface Product {
+    //required fields and optional fields
+    id: number
+    //optional properties
+    name?: string
+    qty?: number
+    inStock?: boolean
+    category?: "Food" | "Electronics" | "Others"
+
+}
+
+let product: Product = {
+    id: 1,
+    name: 'Phone',
+    qty: 100,
+    inStock: true
+}
+//here we have only two properties, still ts compiler gives error, ts compiler looks all properties from the type class must present in the object defintion
+let newProduct: Product = {
+    id: 1,
+    inStock: false,
+    category:"Electronics"
+}
+.....................................................................................
+//type as type 
+
+type Product = {
+    //required fields and optional fields
+    id: number
+    //optional properties
+    name?: string
+    qty?: number
+    inStock?: boolean
+    category?: "Food" | "Electronics" | "Others"
+
+}
+
+let product: Product = {
+    id: 1,
+    name: 'Phone',
+    qty: 100,
+    inStock: true
+}
+//here we have only two properties, still ts compiler gives error, ts compiler looks all properties from the type class must present in the object defintion
+let newProduct: Product = {
+    id: 1,
+    inStock: false,
+    category: "Electronics"
+}
+.....................................................................................
+				 Generics
+What is generics?
+  To restict to have similar or same type of value inside container objects like array,Promise,Observable....
+
+//arrays
+//without type
+let list = [1, "hello", true]
+//with type:syntax-1
+let numList: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+console.log(numList)
+//with type:syntax-2 : generics syntax
+let numList2: Array<number> = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+//functions return array
+function getList(): Array<number> {
+    return [1, 2, 3, 4, 5, 6]
+}
+function getNumList(): number[] {
+    return [1, 2, 3, 4, 5, 6]
+}
+//array of Employees
+class Employee {
+    id: number
+    name: string
+}
+
+let employees: Array<Employee> = [{
+    id: 1,
+    name: 'a'
+}]
+.....................................................................................
+enum Direction {
+    Up,
+    Down,
+    Left,
+    Right,
+}
+console.log(Direction.Up)
+console.log(Direction.Down)
+
+enum UserResponse {
+    No = 0,
+    Yes = 1,
+}
+function respond(recipient: string, message: UserResponse): void {
+    console.log(recipient, message)
+}
+
+respond("Princess Caroline", UserResponse.No);
+...................&&&&&&&&&&&&&&&&&&&...............................................
+
+annotations: @annotation , @Override,@Entity,@Controller
+
+-meta programming : isloate the code logic from main program to ouside, when you 
+req, you inject those features , into code during runtime.
+
+Decorators are experimental feature in es7. but ts added this language with experimental mode.
+
+What is decorator ?
+
+ It is simple javascript function.
+
+
+Steps
+
+1.declare decorator function
+ It is regular javascript function with some syntax.
+2.Use decorator
+ @Decorator
+		
+Types of decorator:
+1.class level decorator
+2.field level decorator
+3.method level decorator
+
+Angular provides lot of built in decorators,here we explore how to use those decorators and how it has been written.
+
+Step 0: 
+tsconfig.json
+{
+    "compilerOptions": {
+        "outDir": "build",
+        "watch": true,
+        "noEmitOnError": true,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true
+    },
+    "exclude": [
+        "node_modules"
+    ],
+    "files": [
+        "src/index.ts"
+    ]
+}
+
+Step 1:
+ Declare decorator function and write decorator logic
+
+Step 2:
+ Use/inject decorators on to class,field,method....
+
+
+//Decorator:
+
+function Course(target: any) {
+    //decorator logic
+    //inject course information
+    Object.defineProperty(target.prototype, 'subject', { value: 'Typescript' })
+}
+
+@Course
+class Student {
+    constructor(public name: string = '') { }
+}
+let student = new Student('Subramanian') as any
+console.log(`${student.name} is learning ${student.subject}`)
+.....................................................................................
+
+Decorators with Parameter:
+//Decorator:
+
+// function Course(target: any) {
+//     //decorator logic
+//     //inject course information
+//     Object.defineProperty(target.prototype, 'subject', { value: 'Typescript' })
+// }
+
+// function Course(courseInfo: any) {
+//     return function (target: any) {
+//         Object.defineProperty(target.prototype, 'subject', { value: courseInfo })
+//     }
+// }
+
+// @Course('Angular with Java')
+// class Student {
+//     constructor(public name: string = '') { }
+// }
+// let student = new Student('Subramanian') as any
+// console.log(`${student.name} is learning ${student.subject}`)
+
+function Course(courseInfo: any) {
+    return function (target: any) {
+        Object.defineProperty(target.prototype, 'courseInfo', { value: courseInfo })
+    }
+}
+
+@Course({ name: 'Angular with java', duration: '40 hrs', instructor: 'Subramanian' })
+class Student {
+    constructor(public name: string = '') { }
+}
+let student = new Student('Ram') as any
+console.log(`${student.name} is learning ${student.courseInfo.name} ${student.courseInfo.duration} ${student.courseInfo.instructor}`)
+
+
+
+
+
+
+
 
 
 
