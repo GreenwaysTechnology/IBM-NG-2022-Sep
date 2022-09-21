@@ -1,0 +1,13 @@
+<div>
+    <h2>User List</h2>
+    <div *ngFor="let user of users">
+        <p>Id : {{user.id}}</p>
+        <p>Name : {{user.name}}</p>
+        <p>Status : {{user.status}}</p>
+        <ul>
+            <li *ngFor="let skill of user.skills">
+                <span>{{skill.skillName}}</span>
+            </li>
+        </ul>
+    </div>
+</div>

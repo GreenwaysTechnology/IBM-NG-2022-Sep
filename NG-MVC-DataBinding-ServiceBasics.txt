@@ -1,0 +1,687 @@
+.....................................................................................
+			 		MVC overview
+.....................................................................................
+
+Angular is MVC framework.
+
+M- Model - State
+V -View - Template
+C -Controller - Component.
+
+State : Data
+In Angular state can represented 
+
+primitives
+objects
+arrays
+
+controller === component
+
+.............................................................................................
+Data binding:
+ Transfering state to ui(view)  from the component(controller), View to Controller
+
+Types of databinding
+1.interpolation
+2.property binding
+3.attribute binding
+4.event binding
+5.two way data binding
+6.class binding
+7.style binding
+....................
+
+1.interpolation:
+
+Transfering data(state) from the controller(component) to template(view)
+
+Template: collection of html elements + angular instructions
+
+angular instructions: special symbols
+
+{{}}
+[]
+*
+()
+#
+
+{{}} - bind state variable inside template.
+
+
+
+export class User {
+    id:number
+    name:string 
+}
+Property 'id' has no initializer and is not definitely assigned in the constructor
+  
+
+ This is one of the ts validation, that means the variables must have been initalized 
+
+ if you dont want to initalize, use skip using a special character(definitly assigned)
+
+    id!:number
+
+ eg:
+
+
+
+export class User {
+    id: number = 0
+    //skipping property initalization
+    name!: string
+    //optional properties need not be declared with !
+    status?:boolean
+}
+
+import { Component, OnInit } from '@angular/core';
+import { User } from './user.type';
+
+@Component({
+  selector: 'app-user',
+  templateUrl: './user.component.html',
+  styles: [
+  ]
+})
+export class UserComponent implements OnInit {
+
+  //User model: using Object
+  user: User = {
+    id: 1,
+    name: 'Subramanian'
+  }
+  
+  constructor() { }
+
+  ngOnInit(): void {
+  }
+
+}
+<div>
+    <h2>User Details</h2>
+    <p>Id {{user.id}}</p>
+    <p>Name {{user.name}}</p>
+</div>
+
+
+app.component.html
+<div>
+  <app-header></app-header>
+  <!-- Display user information -->
+  <app-user></app-user>
+</div>
+............................**************.........................................
+				Array of data
+
+What if i add User skills?
+import { Skill } from "./skill.type"
+
+export class User {
+    id: number = 0
+    //skipping property initalization
+    name!: string
+    //optional properties need not be declared with !
+    status?: "Active" | "InActive"
+    skills?: Array<Skill>
+}
+
+
+export class Skill {
+    skillId!: number
+    skillName!: string
+}
+
+import { Component, OnInit } from '@angular/core';
+import { User } from './user.type';
+
+@Component({
+  selector: 'app-user',
+  templateUrl: './user.component.html',
+  styles: [
+  ]
+})
+export class UserComponent implements OnInit {
+
+  //User model: using Object
+  user: User = {
+    id: 1,
+    name: 'Subramanian',
+    status: "Active",
+    skills: [{
+      skillId: 10,
+      skillName: 'Javascript'
+    },
+    {
+      skillId: 11,
+      skillName: 'Angular'
+    },
+    {
+      skillId: 12,
+      skillName: 'Microservices'
+    }
+    ]
+  }
+
+  constructor() { }
+
+  ngOnInit(): void {
+  }
+
+}
+<div>
+    <h2>User Details</h2>
+    <p>Id : {{user.id}}</p>
+    <p>Name : {{user.name}}</p>
+    <p>Status : {{user.status}}</p>
+    <p>Skills</p>
+    <!-- for loop to iternate array -->
+    <ul>
+        <li *ngFor="let skill of user.skills">
+            <span>{{skill.skillName}}</span>
+        </li>
+    </ul>
+</div>
+.....................................................................................
+			What if i want to return array of data
+....................................................................................
+
+import { Component, OnInit } from '@angular/core';
+import { User } from './user.type';
+
+@Component({
+  selector: 'app-userlist',
+  templateUrl: './userlist.component.html',
+  styles: [
+  ]
+})
+export class UserlistComponent implements OnInit {
+
+  users: Array<User> = [{
+    id: 1,
+    name: 'Subramanian',
+    status: "Active",
+    skills: [{
+      skillId: 10,
+      skillName: 'Javascript'
+    },
+    {
+      skillId: 11,
+      skillName: 'Angular'
+    },
+    {
+      skillId: 12,
+      skillName: 'Microservices'
+    }
+    ]
+  },
+  {
+    id: 2,
+    name: 'Ram',
+    status: "InActive",
+    skills: [{
+      skillId: 10,
+      skillName: 'Javascript'
+    },
+    {
+      skillId: 11,
+      skillName: 'Angular'
+    },
+    {
+      skillId: 12,
+      skillName: 'Microservices'
+    },
+    {
+      skillId: 13,
+      skillName: 'Angular'
+    }
+    ]
+  }
+]
+
+
+  constructor() { }
+
+  ngOnInit(): void {
+  }
+
+}
+...
+<div>
+    <h2>User List</h2>
+    <div *ngFor="let user of users">
+        <p>Id : {{user.id}}</p>
+        <p>Name : {{user.name}}</p>
+        <p>Status : {{user.status}}</p>
+        <ul>
+            <li *ngFor="let skill of user.skills">
+                <span>{{skill.skillName}}</span>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div>
+  <app-header></app-header>
+  <!-- Display user information -->
+  <app-user></app-user>
+  <br>
+  <app-userlist></app-userlist>
+</div>
+.....................................................................................
+		How to isloate the data from the component/controller
+.....................................................................................
+
+Angular uses a concept called "Services".
+
+What is Service?
+
+  Service is Object, which has biz logic and data.
+
+Service is class which should be decorated with @Injectable annotation
+
+step: 1
+Declare mock data:
+import { User } from "../user/user.type";
+
+export const USER: User = {
+    id: 1,
+    name: 'Subramanian',
+    status: "Active",
+    skills: [{
+        skillId: 10,
+        skillName: 'Javascript and E6'
+    },
+    {
+        skillId: 11,
+        skillName: 'Angular'
+    },
+    {
+        skillId: 12,
+        skillName: 'Microservices'
+    }
+    ]
+}
+
+
+
+Declare user UserService
+
+import { Injectable } from "@angular/core";
+import { USER } from "../mockdata/user.mock";
+import { USERS } from "../mockdata/users.list";
+import { User } from './user.type';
+
+
+@Injectable()
+export class UserService {
+    constructor() { }
+    //biz method
+    getUser():User {
+        return USER
+    }
+    getUsers():Array<User>{
+        return USERS
+    }
+}
+
+2.Configuration for object creation
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { UserComponent } from './user.component';
+import { UserlistComponent } from './userlist.component';
+import {UserService} from './user.service'
+
+
+@NgModule({
+  declarations: [
+    UserComponent,
+    UserlistComponent
+  ],
+  imports: [
+    CommonModule
+  ],
+  exports: [
+    UserComponent,
+    UserlistComponent
+  ],
+  providers:[UserService]
+})
+export class UserModule { }
+
+import { Component, OnInit } from '@angular/core';
+import { UserService } from './user.service';
+import { User } from './user.type';
+
+@Component({
+  selector: 'app-userlist',
+  templateUrl: './userlist.component.html',
+  styles: [
+  ]
+})
+export class UserlistComponent implements OnInit {
+
+  users!:Array<User>
+  constructor(private userService:UserService) { 
+     this.users = userService.getUsers()
+  }
+
+  ngOnInit(): void {
+  }
+
+}
+....................................................................................
+			 Data Initalization 
+
+Any user interface apps
+   initalize the data when page is loaded - inital render
+   Once the user starts interaction, that time is also data is loaded- rerender...
+
+Angular loads the data for inital render inside
+
+=>constructor
+   - place where you can initalize the data.
+  This is not recommended, which impacts the performance of loading application
+ constructors are only used for dependency injection.
+
+
+=>ngOnInit
+   It is life cycle method of component , gets called automatically.
+
+Inside this method only data has to be initalized.
+import { Component, OnInit } from '@angular/core';
+import { UserService } from './user.service';
+import { User } from './user.type';
+
+@Component({
+  selector: 'app-userlist',
+  templateUrl: './userlist.component.html',
+  styles: [
+  ]
+})
+export class UserlistComponent implements OnInit {
+
+  users!:Array<User>
+  constructor(private userService:UserService) {  }
+
+  ngOnInit(): void {
+    this.users = this.userService.getUsers()
+  }
+
+}
+.....................................................................................
+			Service Instance creation and scope
+....................................................................................
+
+Service instance can be created for every component in the application
+   -every time new instance is created
+When we inject service at component configuration.
+
+import { Component } from '@angular/core';
+import { UserService } from './user/user.service';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css'],
+  providers:[UserService]
+
+})
+export class AppComponent {
+  title = 'mvcdatabinding';
+  constructor(private userservice:UserService){
+    console.log(this.userservice.getUsers())
+  }
+}
+
+...
+UserList
+import { Component, OnInit } from '@angular/core';
+import { UserService } from './user.service';
+import { User } from './user.type';
+
+@Component({
+  selector: 'app-userlist',
+  templateUrl: './userlist.component.html',
+  styles: [
+  ],
+  providers:[UserService]
+})
+export class UserlistComponent implements OnInit {
+
+  users!: Array<User>
+  constructor(private userService: UserService) {
+  }
+
+  ngOnInit(): void {
+    console.log(this.userService.getUsers())
+    this.users = this.userService.getUsers()
+  }
+
+}
+
+Service instance can be created for the whole application - single ton
+Can be injected into appmodule or any submodule.
+
+Short cut:
+ In modern angular apps, we dont need to use "providers" at module level.
+instead you can configure in the service definition itself.
+
+import { Injectable } from "@angular/core";
+import { USER } from "../mockdata/user.mock";
+import { USERS } from "../mockdata/users.list";
+import { UserModule } from "./user.module";
+import { User } from './user.type';
+
+
+@Injectable({
+    providedIn: 'root' // It uses root injector to create instance
+    //providedIn:UserModule
+})
+export class UserService {
+    constructor() {
+        console.log('user service constructor is called')
+    }
+    //biz method
+    getUser(): User {
+        return USER
+    }
+    getUsers(): Array<User> {
+        return USERS
+    }
+}
+.....................................................................................
+			 Service Types
+
+1.sync service
+   The service returns data with blocking manner
+2.async service
+   The service never block the current work flow.
+
+In javascript how do you implment async programming
+
+Javascript supports async programming at language level
+
+JS provides various patterns.
+
+1.callback pattern
+2.promise pattern
+3.promse with async ...await pattern
+
+Advanced pattern:
+  reactive programming - rxjs
+Angular supports rxjs as the primary implementation for async programming....
+
+Req for writting async programming:
+
+1.high level async api
+   -timers,ajax,websocket....
+2.callbacks/listener functions
+
+callback Pattern:
+
+  passing function as parameter to the another function, which is registered and triggered when data is available.
+import { Injectable } from "@angular/core";
+import { USER } from "../mockdata/user.mock";
+import { USERS } from "../mockdata/users.list";
+import { UserModule } from "./user.module";
+import { User } from './user.type';
+
+
+@Injectable({
+    providedIn: 'root' // It uses root injector to create instance
+    //providedIn:UserModule
+})
+export class UserService {
+    constructor() {
+        console.log('user service constructor is called')
+    }
+    //biz method
+    //sync apis
+    getUser(): User {
+        return USER
+    }
+    getUsers(): Array<User> {
+        return USERS
+    }
+    //async api :callback based api
+    getUsersAsyncCB(callback: Function) {
+       //return users data in delayed manner
+       setTimeout(callback,5000,USERS)
+    }
+}
+
+import { Component, OnInit } from '@angular/core';
+import { UserService } from './user.service';
+import { User } from './user.type';
+
+@Component({
+  selector: 'app-userlist',
+  templateUrl: './userlist.component.html',
+  styles: [
+  ],
+  // providers:[UserService]
+})
+export class UserlistComponent implements OnInit {
+
+  users!: Array<User>
+  constructor(private userService: UserService) {
+  }
+
+  ngOnInit(): void {
+    // console.log(this.userService.getUsers())
+    // this.users = this.userService.getUsers()
+    //async call
+    this.userService.getUsersAsyncCB((users: User[]) => {
+      this.users = users
+    })
+  }
+
+}
+.....................................................................................				    Promise is alternate to callbacks
+.....................................................................................import { Injectable } from "@angular/core";
+import { USER } from "../mockdata/user.mock";
+import { USERS } from "../mockdata/users.list";
+import { UserModule } from "./user.module";
+import { User } from './user.type';
+
+
+@Injectable({
+    providedIn: 'root' // It uses root injector to create instance
+    //providedIn:UserModule
+})
+export class UserService {
+    constructor() {
+        console.log('user service constructor is called')
+    }
+    getUsersAsyncPromsie(): Promise<User[]> {
+        return new Promise((resolve, reject) => {
+            //return users data in delayed manner
+            setTimeout(resolve, 5000, USERS)
+        })
+    }
+}
+import { Component, OnInit } from '@angular/core';
+import { UserService } from './user.service';
+import { User } from './user.type';
+
+@Component({
+  selector: 'app-userlist',
+  templateUrl: './userlist.component.html',
+  styles: [
+  ],
+  // providers:[UserService]
+})
+export class UserlistComponent implements OnInit {
+
+  users!: Array<User>
+  constructor(private userService: UserService) {
+  }
+
+  ngOnInit(): void {
+    //async call using promises
+    this.userService.getUsersAsyncPromsie()
+      .then((users: User[]) => {
+        this.users = users
+      })
+  }
+
+}
+...................................................................................
+			   async....await
+
+import { Component, OnInit } from '@angular/core';
+import { UserService } from './user.service';
+import { User } from './user.type';
+
+@Component({
+  selector: 'app-userlist',
+  templateUrl: './userlist.component.html',
+  styles: [
+  ],
+  // providers:[UserService]
+})
+export class UserlistComponent implements OnInit {
+
+  users!: Array<User>
+  constructor(private userService: UserService) {
+  }
+
+  async ngOnInit() {
+    //async call using async.. await  keyword
+    try {
+      const users = await this.userService.getUsersAsyncPromsie()
+      this.users = users
+    }
+    catch (err) {
+
+    }
+  }
+
+}
+to be continued
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
