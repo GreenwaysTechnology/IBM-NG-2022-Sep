@@ -78,9 +78,9 @@ body
 |
 Layout/Paint Engine: will convert nodes into pxs : final output
 
-..............................................................................................
-				Dynamic HTML - Inside Web Browser
-.............................................................................................
+.....................................................................................
+			Dynamic HTML - Inside Web Browser
+.....................................................................................
 
 Once the html has been rendered by the web browser, can we change the html(adding new element,updating existing element content,removing node,listing nodes).
 
@@ -688,6 +688,26 @@ bootstrap:
 
    <footer></footer>
 </div>
+
+index.html
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Gettingstarted</title>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+</head>
+<body>
+  <app-root>
+    	<app-header>
+		<header></header>
+	</app-header>
+  </app-root>
+</body>
+</html>
+
 
 
 Steps:

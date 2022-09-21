@@ -1,0 +1,203 @@
+.....................................................................................
+			 		MVC overview
+.....................................................................................
+
+Angular is MVC framework.
+
+M- Model - State
+V -View - Template
+C -Controller - Component.
+
+State : Data
+In Angular state can represented 
+
+primitives
+objects
+arrays
+
+controller === component
+
+.............................................................................................
+Data binding:
+ Transfering state to ui(view)  from the component(controller), View to Controller
+
+Types of databinding
+1.interpolation
+2.property binding
+3.attribute binding
+4.event binding
+5.two way data binding
+6.class binding
+7.style binding
+....................
+
+1.interpolation:
+
+Transfering data(state) from the controller(component) to template(view)
+
+Template: collection of html elements + angular instructions
+
+angular instructions: special symbols
+
+{{}}
+[]
+*
+()
+#
+
+{{}} - bind state variable inside template.
+
+
+
+export class User {
+    id:number
+    name:string 
+}
+Property 'id' has no initializer and is not definitely assigned in the constructor
+  
+
+ This is one of the ts validation, that means the variables must have been initalized 
+
+ if you dont want to initalize, use skip using a special character(definitly assigned)
+
+    id!:number
+
+ eg:
+
+
+
+export class User {
+    id: number = 0
+    //skipping property initalization
+    name!: string
+    //optional properties need not be declared with !
+    status?:boolean
+}
+
+import { Component, OnInit } from '@angular/core';
+import { User } from './user.type';
+
+@Component({
+  selector: 'app-user',
+  templateUrl: './user.component.html',
+  styles: [
+  ]
+})
+export class UserComponent implements OnInit {
+
+  //User model: using Object
+  user: User = {
+    id: 1,
+    name: 'Subramanian'
+  }
+  
+  constructor() { }
+
+  ngOnInit(): void {
+  }
+
+}
+<div>
+    <h2>User Details</h2>
+    <p>Id {{user.id}}</p>
+    <p>Name {{user.name}}</p>
+</div>
+
+
+app.component.html
+<div>
+  <app-header></app-header>
+  <!-- Display user information -->
+  <app-user></app-user>
+</div>
+............................**************.........................................
+				Array of data
+
+What if i add User skills?
+import { Skill } from "./skill.type"
+
+export class User {
+    id: number = 0
+    //skipping property initalization
+    name!: string
+    //optional properties need not be declared with !
+    status?: "Active" | "InActive"
+    skills?: Array<Skill>
+}
+
+
+export class Skill {
+    skillId!: number
+    skillName!: string
+}
+
+import { Component, OnInit } from '@angular/core';
+import { User } from './user.type';
+
+@Component({
+  selector: 'app-user',
+  templateUrl: './user.component.html',
+  styles: [
+  ]
+})
+export class UserComponent implements OnInit {
+
+  //User model: using Object
+  user: User = {
+    id: 1,
+    name: 'Subramanian',
+    status: "Active",
+    skills: [{
+      skillId: 10,
+      skillName: 'Javascript'
+    },
+    {
+      skillId: 11,
+      skillName: 'Angular'
+    },
+    {
+      skillId: 12,
+      skillName: 'Microservices'
+    }
+    ]
+  }
+
+  constructor() { }
+
+  ngOnInit(): void {
+  }
+
+}
+<div>
+    <h2>User Details</h2>
+    <p>Id : {{user.id}}</p>
+    <p>Name : {{user.name}}</p>
+    <p>Status : {{user.status}}</p>
+    <p>Skills</p>
+    <!-- for loop to iternate array -->
+    <ul>
+        <li *ngFor="let skill of user.skills">
+            <span>{{skill.skillName}}</span>
+        </li>
+    </ul>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
