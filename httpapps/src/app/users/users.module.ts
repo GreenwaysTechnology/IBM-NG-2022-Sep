@@ -4,20 +4,23 @@ import { UsersComponent } from './users.component';
 import { HttpClientModule } from '@angular/common/http'
 import { UtilModule } from '../util/util.module';
 import { UserslistComponent } from './userslist.component';
+import { UsersformComponent } from './usersform.component';
 
 
 
 @NgModule({
   declarations: [
     UsersComponent,
-    UserslistComponent
+    UserslistComponent,
+    UsersformComponent
   ],
   imports: [
     CommonModule, HttpClientModule,UtilModule
   ],
   exports: [
     UsersComponent,
-    UserslistComponent
+    UserslistComponent,
+    UsersformComponent
   ]
 })
 export class UsersModule { }

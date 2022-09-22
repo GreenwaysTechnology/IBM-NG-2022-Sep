@@ -17,6 +17,13 @@ export class UsersService {
       catchError(this.handleError<User[]>('getUsers', [{ id: 0, name: 'test' }]))
     )
   }
+  save(user: User):Observable<User> {
+    console.log('user posted in sevice layer', user)
+    return this.http.post<User>(`${this.url}/users`, user).pipe(
+      catchError(this.handleError<User>('Save is Called'))
+    )
+  }
+
   //handle error Api
   private handleError<T>(operation = 'operation', result?: T) {
     //return function

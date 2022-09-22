@@ -1,15 +1,24 @@
-<ul>
+<div *ngIf="loading; else notloading  ">
+  <h2>{{status}}</h2>
+</div>
+<ng-template #notloading>
+  <ul>
     <h1>{{title}}</h1>
-    <!-- <li *ngFor="let user of users |async">
-        <span>{{user.id}} -
-             {{user.name | titlecase}} -
-            {{user.date | date:'dd/MM/yyyy' }} {{user.points | decimalFraction :3}}</span>
-    </li> -->
-      <li *ngFor="let user of users |async">
-        <span>{{user.name | titlecase}}</span>           
+    <li *ngFor="let user of users |async">
+      <span [class.selected]="user===selectedUser" (click)="onSelect(user)">{{user.name | titlecase}}</span>
     </li>
-</ul>
-<br>
+  </ul>
+  <br>
+  <!-- Task for you : break this code into a separate Component: -->
+  <!-- <app-selecteduser [selectedUser]="selectUser"></app-selecteduser> -->
+  <div *ngIf="selectedUser">
+    <h3>{{selectedUser.id}} details</h3>
+    <h4>Name : {{selectedUser.name | titlecase}}</h4>
+    <h4>Date : {{selectedUser.date | date}}</h4>
+    <h4>Points :{{selectedUser.points | decimalFraction}}</h4>
+  </div>
+</ng-template>
 <div>
-
+  <h3>User Form</h3>
+  <button (click)="sendUser()" class="btn btn-success">Submit</button>
 </div>

@@ -10,3 +10,7 @@ body {
     padding: 5rem;
     background-color: azure;
 }
+.selected {
+    background-color: black;
+    color: white;
+}

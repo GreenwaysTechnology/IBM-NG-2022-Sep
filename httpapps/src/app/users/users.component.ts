@@ -17,6 +17,14 @@ export class UsersComponent implements OnInit {
 
   // users!:Array<User>
   users!: Observable<User[]>
+
+  loading: boolean = true;
+  status: string = "loading....."
+
+  user!: User
+
+  message: string = ""
+
   constructor(private userService: UsersService) { }
 
 
@@ -28,8 +36,23 @@ export class UsersComponent implements OnInit {
     //     this.users = users
     //   }
     // })
+    //todo: remove this once if you test the code
+    // setTimeout(() => {
+    //   this.users = this.userService.getUsers()
+    //   this.loading = !this.loading;
+    // }, 5000)
     this.users = this.userService.getUsers()
-
+    this.loading = !this.loading;
   }
-
+  getUser(user: User) {
+    console.log('Parent  ', user)
+    this.userService.save(user).subscribe({
+      next: user => {
+        this.message = 'successfully added'
+      },
+      error: err => {
+        console.log('User not added', err)
+      }
+    })
+  }
 }
