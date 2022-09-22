@@ -1,0 +1,560 @@
+				HTTP Programming using Rxjs
+.....................................................................................
+
+Most of the front end applications need to communicate with a server over the HTTP protocal to download and upload data and access the back end services.
+
+Angular provides a client HTTP APi called "HttpClient" built in service class.
+
+HttpClient service class has been listed in the module "@angular/common/http"  HttpClientModule.
+
+This has to be injected into the module where you need to interact with http service.
+
+Steps:
+
+1.server rest api
+  -java
+  -c#
+  -python
+  -php
+  -node
+
+Node based rest api
+
+Install JSON Server
+
+npm install -g json-server
+
+E:\session\IBM\2022\sep\ng-session\restapiserver>
+
+db.json
+{
+    "posts": [
+        {
+            "id": 1,
+            "title": "json-server",
+            "author": "typicode"
+        }
+    ],
+    "users": [
+        {
+            "id": 1,
+            "name": "Dr.Nice"
+        },
+        {
+            "id": 2,
+            "name": "Bombastor"
+        },
+        {
+            "id": 3,
+            "name": "RubberMan"
+        },
+        {
+            "id": 4,
+            "name": "Spider Man"
+        },
+        {
+            "id": 5,
+            "name": "Celeritas"
+        },
+        {
+            "id": 6,
+            "name": "Dynama"
+        },
+        {
+            "id": 7,
+            "name": "Dr.IQ"
+        },
+        {
+            "id": 8,
+            "name": "Magma"
+        },
+        {
+            "id": 9,
+            "name": "Iron Man"
+        },
+        {
+            "id": 10,
+            "name": "Subramanian"
+        }
+    ],
+    "comments": [
+        {
+            "id": 1,
+            "body": "some comment",
+            "postId": 1
+        }
+    ],
+    "profile": {
+        "name": "typicode"
+    }
+}
+
+start json server
+json-server --watch db.json
+
+2.angular client api
+
+create user module
+create user service
+create user component
+display user details from the backend.
+
+
+Inject HttpClientModule
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { UsersComponent } from './users.component';
+import { HttpClientModule } from '@angular/common/http'
+
+
+
+@NgModule({
+  declarations: [
+    UsersComponent
+  ],
+  imports: [
+    CommonModule, HttpClientModule
+  ],
+  exports: [
+    UsersComponent
+  ]
+})
+export class UsersModule { }
+
+
+export class User{
+    id!:number
+    name!:string
+}
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http'
+import { Observable } from 'rxjs'
+import { User } from './user.type';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class UsersService {
+  url = "http://localhost:3000"
+  constructor(private http: HttpClient) { }
+
+  getUsers(): Observable<User[]> {
+    return this.http.get<User[]>(`${this.url}/users`)
+  }
+}
+
+import { Component, OnInit } from '@angular/core';
+import { User } from './user.type';
+import { UsersService } from './users.service';
+
+@Component({
+  selector: 'app-users',
+  templateUrl: './users.component.html',
+  styles: [
+  ]
+})
+export class UsersComponent implements OnInit {
+
+  users!:Array<User>
+  constructor(private userService: UsersService) { }
+
+  ngOnInit(): void {
+    //console.log(this.userService.getUsers())
+    this.userService.getUsers().subscribe({
+      next: users => {
+        console.log(users)
+        this.users = users
+      }
+    })
+  }
+
+}
+<div>
+    <ul>
+        <li *ngFor="let user of users">
+            <span>{{user.id}} {{user.name}}</span>
+        </li>
+    </ul>
+</div>
+.....................................................................................
+			How to handle HTTP errors
+....................................................................................
+
+instead of throwing error, we can convert into meanful response, so that app never crash.
+
+catchError
+  Catches errors on the observable to be handled by returning a new observable or throwing an error.
+
+
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http'
+import { Observable, catchError, of } from 'rxjs'
+import { User } from './user.type';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class UsersService {
+  url = "http://localhost:3000"
+  constructor(private http: HttpClient) { }
+
+  getUsers(): Observable<User[]> {
+    return this.http.get<User[]>(`${this.url}/users`).pipe(
+      //catchError and convert into proper response
+      //catchError(err => of<User[]>([{ id: 0, name: 'test' }]))
+      catchError(this.handleError<User[]>('getUsers', [{ id: 0, name: 'test' }]))
+    )
+  }
+  //handle error Api
+  private handleError<T>(operation = 'operation', result?: T) {
+    //return function
+    return (error: any): Observable<T> => {
+      console.log(error)
+      return of(result as T)
+    }
+  }
+
+}
+.....................................................................................
+				Data Formating -Pipes
+....................................................................................
+
+What is pipe?
+ pipe object used for data formating.
+
+eg:
+ show uppercase
+ show money values - $,#,
+ show date format  - 1/10/2021 , feb 10 2021...
+ custom formates
+
+Angular provides lot of built in pipes, you can write your own pipes as well.
+....
+Syntax:
+  some data | nameof the pipe.
+
+Pipe with Input :
+  some data | nameof the pipe:input
+
+Builtin pipes:
+
+DatePipe: Formats a date value according to locale rules.
+
+UpperCasePipe: Transforms text to all upper case.
+
+LowerCasePipe: Transforms text to all lower case.
+
+CurrencyPipe: Transforms a number to a currency string, formatted according to locale rules.
+
+DecimalPipe: Transforms a number into a string with a decimal point, formatted according to locale rules.
+
+PercentPipe: Transforms a number to a percentage string, formatted according to locale rules.
+
+asyncPipe : to bind list of values async
+   - used to bind observables directly.
+
+............................
+<div>
+    <ul>
+        <li *ngFor="let user of users">
+            <!-- Pipe -->
+            <!-- <span>{{user.id}} {{user.name | uppercase}}</span> -->
+            <span>{{user.id}} {{user.name | titlecase}} {{user.date | date:'dd/MM/yyyy' }}</span>
+
+        </li>
+    </ul>
+</div>
+.....................................................................................
+				Async pipe
+.....................................................................................
+
+without subscribe method how to bind data in ui.
+
+async pipe works with observable directly.
+
+import { Component, OnInit } from '@angular/core';
+import { User } from './user.type';
+import { Observable } from 'rxjs'
+import { UsersService } from './users.service';
+
+@Component({
+  selector: 'app-users',
+  templateUrl: './users.component.html',
+  styles: [
+  ]
+})
+export class UsersComponent implements OnInit {
+
+  // users!:Array<User>
+  users!: Observable<User[]>
+  constructor(private userService: UsersService) { }
+
+
+  ngOnInit(): void {
+    //console.log(this.userService.getUsers())
+    // this.userService.getUsers().subscribe({
+    //   next: users => {
+    //     console.log(users)
+    //     this.users = users
+    //   }
+    // })
+    this.users = this.userService.getUsers()
+
+  }
+
+}
+<div>
+    <ul>
+        <!-- <li *ngFor="let user of users">
+             <span>{{user.id}} {{user.name | titlecase}} {{user.date | date:'dd/MM/yyyy' }}</span> -->
+
+        <!-- </li> -->
+        <li *ngFor="let user of users |async">
+            <span>{{user.id}} {{user.name | titlecase}} 
+                {{user.date | date:'dd/MM/yyyy' }}</span>
+        </li>
+    </ul>
+</div>
+.....................................................................................
+			  Custom Pipes
+.....................................................................................
+What if i need a pipe which is not part of angular lib...
+  Custom Pipe.
+
+Custom pipe object, need to be created inject into module.
+
+import { Pipe, PipeTransform } from '@angular/core';
+
+@Pipe({
+  name: 'decimalFraction'
+})
+export class DecimalFractionPipe implements PipeTransform {
+
+  transform(value: number, noofDigits: number = 1): string {
+    return value.toFixed(noofDigits)
+  }
+
+}
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { DecimalFractionPipe } from './decimal-fraction.pipe';
+
+
+
+@NgModule({
+  declarations: [
+    DecimalFractionPipe
+  ],
+  imports: [
+    CommonModule
+  ],
+  exports: [
+    DecimalFractionPipe
+  ],
+  
+})
+export class UtilModule { }
+...
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { UsersComponent } from './users.component';
+import { HttpClientModule } from '@angular/common/http'
+import { UtilModule } from '../util/util.module';
+
+
+
+@NgModule({
+  declarations: [
+    UsersComponent
+  ],
+  imports: [
+    CommonModule, HttpClientModule,UtilModule
+  ],
+  exports: [
+    UsersComponent
+  ]
+})
+export class UsersModule { }
+...
+<div>
+    <ul>
+        <!-- <li *ngFor="let user of users">
+             <span>{{user.id}} {{user.name | titlecase}} {{user.date | date:'dd/MM/yyyy' }}</span> -->
+
+        <!-- </li> -->
+        <li *ngFor="let user of users |async">
+            <span>{{user.id}} -
+                 {{user.name | titlecase}} -
+                {{user.date | date:'dd/MM/yyyy' }} {{user.points | decimalFraction :3}}</span>
+        </li>
+    </ul>
+</div>
+.....................................................................................
+			  Component Design principle
+.....................................................................................
+
+Component Responsiablity:
+
+ 1.Talk to the service layer and get data
+ 2.Bind the data and display those data
+
+Having data fetching and ui in one component is not good idea, we need to isloate 
+
+One Component only talking to the service layer and get data.
+
+Another component is going to have only UI logic.
+
+The component is going to talk to the service layer is called "Parent Component"
+The component is going to have only ui logic is called "Child Component"
+
+How to pass data from the parent to child?
+  "Property Pattern" -  Props pattern
+
+data is passed as prop from parent to child.
+
+Steps:
+
+1.Define Parent component - Users
+2.Define Child Component - UsersList
+
+
+Parent :
+<div>
+    <!-- Props pattern lefside is propName and right side is instance variable Name 
+        any object can be passed as prop
+    -->
+   <app-userslist [users]="users" title="User Details" ></app-userslist>
+</div>
+import { Component, OnInit } from '@angular/core';
+import { User } from './user.type';
+import { Observable } from 'rxjs'
+import { UsersService } from './users.service';
+
+@Component({
+  selector: 'app-users',
+  templateUrl: './users.component.html',
+  styles: [
+  ]
+})
+export class UsersComponent implements OnInit {
+
+  users!: Observable<User[]>
+  constructor(private userService: UsersService) { }
+
+
+  ngOnInit(): void {
+    this.users = this.userService.getUsers()
+  }
+
+}
+
+Child: UserList
+<ul>
+    <h1>{{title}}</h1>
+    <li *ngFor="let user of users |async">
+        <span>{{user.id}} -
+             {{user.name | titlecase}} -
+            {{user.date | date:'dd/MM/yyyy' }} {{user.points | decimalFraction :3}}</span>
+    </li>
+</ul>
+import { Component, OnInit, Input } from '@angular/core';
+import { User } from './user.type';
+import { Observable } from 'rxjs'
+
+@Component({
+  selector: 'app-userslist',
+  templateUrl: './userslist.component.html',
+  styles: [
+  ]
+})
+export class UserslistComponent implements OnInit {
+  @Input()
+  users!: Observable<User[]>
+  @Input()
+  title:string=''
+  constructor() { }
+
+  ngOnInit(): void {
+  }
+
+}
+..................................................................................
+				Angular Dev Tool 
+..................................................................................
+
+What if i want to see the component layout?/structure?
+https://angular.io/guide/devtools
+....................................................................................
+			CSS in angular
+
+
+Global CSS
+  Third party css 
+component level css
+  
+How to install ng-bootstrap?
+
+npm install bootstrap 
+
+angular.json
+   "styles": [
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "src/styles.css"
+            ],
+
+....................................................................................
+			     Event Handling
+....................................................................................
+			
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

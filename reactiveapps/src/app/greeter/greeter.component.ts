@@ -10,6 +10,7 @@ import { GreeterService } from './greeter.service';
 export class GreeterComponent implements OnInit {
 
   message!: string;
+  hai!:string 
   constructor(private greeterService: GreeterService) { }
 
   ngOnInit(): void {
@@ -22,6 +23,16 @@ export class GreeterComponent implements OnInit {
         console.log('stream is completed')
       }
     })
+    this.greeterService.sayHai().subscribe({
+      next: message => {
+        console.log(message)
+        this.hai = message
+      },
+      complete: function () {
+        console.log('stream is completed')
+      }
+    })
+
   }
 
 }

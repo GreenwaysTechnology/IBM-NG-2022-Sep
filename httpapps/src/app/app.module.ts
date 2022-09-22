@@ -2,9 +2,8 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
-import { UserModule } from './user/user.module';
-import { GreeterModule } from './greeter/greeter.module';
-import { NumbersModule } from './numbers/numbers.module';
+import { UsersModule } from './users/users.module';
+import { UtilModule } from './util/util.module';
 
 @NgModule({
   declarations: [
@@ -12,9 +11,8 @@ import { NumbersModule } from './numbers/numbers.module';
   ],
   imports: [
     BrowserModule,
-    UserModule,
-    GreeterModule,
-    NumbersModule
+    UsersModule,
+    UtilModule
   ],
   providers: [],
   bootstrap: [AppComponent]

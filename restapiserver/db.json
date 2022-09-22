@@ -1,0 +1,88 @@
+{
+    "posts": [
+        {
+            "id": 1,
+            "title": "json-server",
+            "author": "typicode"
+        }
+    ],
+    "users": [
+        {
+            "id": 1,
+            "name": "Dr.Nice",
+            "date":"2012-04-23T18:25:43.511Z",
+            "points" : 98.343434
+        },
+        {
+            "id": 2,
+            "name": "Bombastor",
+            "date":"2012-04-23T18:25:43.511Z",
+            "points" : 45.677755
+
+        },
+        {
+            "id": 3,
+            "name": "RubberMan",
+            "date":"2012-04-23T18:25:43.511Z",
+            "points" : 23.6777
+
+        },
+        {
+            "id": 4,
+            "name": "Spider Man",
+            "date":"2012-04-23T18:25:43.511Z",
+            "points" : 278.677
+        },
+        {
+            "id": 5,
+            "name": "Celeritas",
+            "date":"2012-04-23T18:25:43.511Z",
+            "points" : 12.567
+        },
+        {
+            "id": 6,
+            "name": "Dynama",
+            "date":"2012-04-23T18:25:43.511Z",
+            "points" : 34.5677
+
+        },
+        {
+            "id": 7,
+            "name": "Dr.IQ",
+            "date":"2012-04-23T18:25:43.511Z",
+            "points" : 34.5677
+
+        },
+        {
+            "id": 8,
+            "name": "Magma",
+            "date":"2012-04-23T18:25:43.511Z",
+            "points" : 12.567
+
+        },
+        {
+            "id": 9,
+            "name": "Iron Man",
+            "date":"2012-04-23T18:25:43.511Z",
+            "points" : 123.56732
+
+        },
+        {
+            "id": 10,
+            "name": "Subramanian",
+            "date":"2012-04-23T18:25:43.511Z",
+            "points" : 13.5672323
+
+        }
+    ],
+    "comments": [
+        {
+            "id": 1,
+            "body": "some comment",
+            "postId": 1
+        }
+    ],
+    "profile": {
+        "name": "typicode"
+    }
+}
