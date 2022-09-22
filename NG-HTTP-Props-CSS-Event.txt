@@ -505,7 +505,566 @@ angular.json
 ....................................................................................
 			     Event Handling
 ....................................................................................
-			
+
+How to implement event  handling?
+
+Plain js:
+
+<button onclick="listener()">Click</button>
+
+In Angular , event handling is done using a symbol called ()
+
+<button (NameoftheEvent)="listener()">Click</button>
+<button (click)="listener()">Click</button>
+.............................................			
+
+eg:
+<ul>
+  <h1>{{title}}</h1>
+ import { Component, OnInit, Input } from '@angular/core';
+import { User } from './user.type';
+import { Observable } from 'rxjs'
+
+@Component({
+  selector: 'app-userslist',
+  templateUrl: './userslist.component.html',
+  styles: [
+  ]
+})
+export class UserslistComponent implements OnInit {
+  @Input()
+  users!: Observable<User[]>
+  @Input()
+  title: string = ''
+  selectedUser!: User
+  constructor() { }
+
+  ngOnInit(): void {
+  }
+  //Event Listener
+  onSelect(user: User) {
+    console.log(user)
+    this.selectedUser = user
+  }
+
+}
+  <li *ngFor="let user of users |async">
+    <span (click)="onSelect(user)">{{user.name | titlecase}}</span>
+  </li>
+</ul>
+<br>
+<div>
+  <h3>{{selectedUser.id}} details</h3>
+</div>
+
+if you run this code, you will get error
+main.ts:11 ERROR TypeError: Cannot read properties of undefined (reading 'id')
+    at UserslistComponent_Template (userslist.component.html:14:7)
+    at executeTemplate (core.mjs:12084:9)
+    at refreshView (core.mjs:11969:13)
+    at refreshComponent (core.mjs:13043:13)
+    at refreshChildComponents (core.mjs:11759:9)
+    at refreshView (core.mjs:12019:13)
+    at refreshComponent (core.mjs:13043:13)
+    at refreshChildComponents (core.mjs:11759:9)
+    at refreshView (core.mjs:12019:13)
+    at refreshComponent (core.mjs:13043:13)
+
+The reason because, the selectedUser would be undefined during inital render, when u access selectUser.id would throw error.
+
+How to fix this problem?
+
+ Solution:
+  we need to verify when that variable is having value(object reference) or not.
+
+selectUser:User => undefined
+
+Using if condition.
+
+How to introduce if condition inside template?
+.....................................................................................
+			   Directives
+.....................................................................................
+.........
+What is directive?
+  Directive is custom element / attribute..
+
+<app-root> ,<app-root [title]>
+
+
+Types of Directives:
+1.Template directive
+2.Structural directive
+3.Attribute directive
+
+1.Template directive
+   The directive with Template ; all components create template directive
+  <app-root> ----------------template directive
+  <app-profile>--------------template directive
+
+All component's meta data is inherited from Directive meta.
+Directive is parent , Component is child
+
+Every component is directive.
+
+
+
+2.Structural Directive
+   It is type of directive, used to change HTML Layouts.
+   They shape or reshape the DOM's "Structure" typically by adding,removing and manipulating
+   the host elements to which they attached.
+   
+  -Host element means html elements eg div,span,li,table.
+  -It is one of the "special attribute" directive
+  -All structural directive starts with "*" notation.
+
+*ngFor -  Structural Directive
+
+Built in structural directives
+
+1.*ngFor : for loop
+2.*ngIf  : if condition
+3.*ngSwitch : switch...case
+
+
+List /Array rendering:
+......................
+
+Layouts:
+1.List view Layout
+   -ul li
+2.Card View Layout
+  div
+3.Grid View Layout
+  table tr td
+
+
+1.for Loop: *ngFor
+
+-where ever you want to repeate elements
+
+element could be dom element or custom elements
+
+eg:
+ <anyelement *ngFor="condition">
+
+ <div *ngFor="let variableName of arrayname">
+       {{VariableName.property}}
+ </div>
+ This code will create more div elements
+
+ <app-item-list *ngFor="">
+Static view:
+<ul>
+        <li>1</li>
+        <li>2</li>
+        <li>3</li>
+
+    </ul>
+
+<div>
+    <h1 style="text-align: center;">For loop</h1>
+
+    <!--ul element-->
+    <ul>
+        <li *ngFor="let i of numbers">{{i}}</li>
+    </ul>
+    <!--Ui element for tod-->
+    <ul class="list-group">
+        <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let todo of todos">
+            <span class="badge badge-primary badge-pill"> {{todo.id}} </span> {{todo.title}}
+        </li>
+
+    </ul>
+    <div class="card" *ngFor="let todo of todos">
+        <h5 class="card-header">{{todo.id}}</h5>
+        <div class="card-body">
+            <h5 class="card-title">{{todo.userId}}</h5>
+            <p class="card-text">{{todo.title}}</p>
+            <a href="#" class="btn btn-primary">Update</a>
+        </div>
+    </div>
+</div>
+
+////////////////////////////////////////////////////////////////////////////////////////////
+
+eg:
+<div>
+    <ul>
+        <li *ngFor="let course of courses">
+            {{course}}
+        </li>
+    </ul>
+</div>
+<h2>Users data</h2>
+<div>
+    <div *ngFor="let user of users">
+        <h3>{{user.username}}</h3>
+        <p>{{user.email}}</p>
+        <address>
+            <p>{{user.address.street}},{{user.address.city}}</p>
+        </address>
+    </div>
+</div>
+.....................................................................................
+				  *ngIf
+
+To implement if condition
+
+<ul>
+  <h1>{{title}}</h1>
+  <!-- <li *ngFor="let user of users |async">
+        <span>{{user.id}} -
+             {{user.name | titlecase}} -
+            {{user.date | date:'dd/MM/yyyy' }} {{user.points | decimalFraction :3}}</span>
+    </li> -->
+  <li *ngFor="let user of users |async">
+    <span (click)="onSelect(user)">{{user.name | titlecase}}</span>
+  </li>
+</ul>
+<br>
+<div *ngIf="selectedUser">
+  <h3>{{selectedUser.id}} details</h3>
+  <h4>Name : {{selectedUser.name | titlecase}}</h4>
+  <h4>Date : {{selectedUser.date | date}}</h4>
+  <h4>Points :{{selectedUser.points | decimalFraction}}</h4>
+</div>
+....................................................................................
+				Spinner Implementation
+.....................................................................................
+
+Parent Compoent:
+import { Component, OnInit } from '@angular/core';
+import { User } from './user.type';
+import { Observable } from 'rxjs'
+import { UsersService } from './users.service';
+
+@Component({
+  selector: 'app-users',
+  templateUrl: './users.component.html',
+  // styles: [`
+  //   h1 {
+  //     color:'blue'
+  //   }`
+  // ]
+  styleUrls: ['user.component.css']
+})
+export class UsersComponent implements OnInit {
+
+  // users!:Array<User>
+  users!: Observable<User[]>
+
+  loading: boolean = true;
+  status: string = "loading....."
+
+  constructor(private userService: UsersService) { }
+
+
+  ngOnInit(): void {
+    //todo: remove this once if you test the code
+    setTimeout(()=>{
+      this.users = this.userService.getUsers()
+      this.loading = !this.loading;
+    },5000)
+    
+
+  }
+
+}
+
+<div class="container">
+    <!-- Props pattern lefside is propName and right side is instance variable Name 
+        any object can be passed as prop
+    -->
+   <app-userslist [users]="users" 
+    title="User Details" 
+    [loading]="loading" 
+    [status]="status" ></app-userslist>
+</div>
+
+Child Component:
+import { Component, OnInit, Input } from '@angular/core';
+import { User } from './user.type';
+import { Observable } from 'rxjs'
+
+@Component({
+  selector: 'app-userslist',
+  templateUrl: './userslist.component.html',
+  styles: [
+  ]
+})
+export class UserslistComponent implements OnInit {
+  @Input()
+  users!: Observable<User[]>
+  @Input()
+  title: string = ''
+  selectedUser!: User
+
+  @Input()
+  status!:string
+  @Input()
+  loading!:boolean
+  constructor() { }
+
+  ngOnInit(): void {
+  }
+  //Event Listener
+  onSelect(user: User) {
+    console.log(user)
+    this.selectedUser = user
+  }
+
+}
+...
+<div *ngIf="loading; else notloading  ">
+  <h2>{{status}}</h2>
+</div>
+<ng-template #notloading>
+  <ul>
+    <h1>{{title}}</h1>
+    <li *ngFor="let user of users |async">
+      <span (click)="onSelect(user)">{{user.name | titlecase}}</span>
+    </li>
+  </ul>
+  <br>
+  <div *ngIf="selectedUser">
+    <h3>{{selectedUser.id}} details</h3>
+    <h4>Name : {{selectedUser.name | titlecase}}</h4>
+    <h4>Date : {{selectedUser.date | date}}</h4>
+    <h4>Points :{{selectedUser.points | decimalFraction}}</h4>
+  </div>
+</ng-template>
+.....................................................................................
+				Dynamic CSS
+....................................................................................
+
+Adding and removing css classes during time -  Class Binding.
+
+[classtobeadded]="condition"
+
+
+styles.css
+/* You can add global styles to this file, and also import other style files */
+* {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+h1 {
+    color: #264D73
+}
+body {
+    padding: 5rem;
+    background-color: azure;
+}
+.selected {
+    background-color: black;
+    color: white;
+}
+
+....
+<div *ngIf="loading; else notloading  ">
+  <h2>{{status}}</h2>
+</div>
+<ng-template #notloading>
+  <ul>
+    <h1>{{title}}</h1>
+    <li *ngFor="let user of users |async">
+      <span [class.selected]="user===selectedUser" (click)="onSelect(user)">{{user.name | titlecase}}</span>
+    </li>
+  </ul>
+  <br>
+  <!-- Task for you : break this code into a separate Component: -->
+  <!-- <app-selecteduser [selectedUser]="selectUser"></app-selecteduser> -->
+  <div *ngIf="selectedUser">
+    <h3>{{selectedUser.id}} details</h3>
+    <h4>Name : {{selectedUser.name | titlecase}}</h4>
+    <h4>Date : {{selectedUser.date | date}}</h4>
+    <h4>Points :{{selectedUser.points | decimalFraction}}</h4>
+  </div>
+</ng-template>
+....................................................................................
+			  Event Emitter Pattern
+			     (Custom Events)
+.....................................................................................
+
+
+if you want to send to data from child to service, you should not send directly rather we have to send to Parent , parent will send data to child.
+
+
+Steps:
+
+1.Child Component
+
+1.We need to create EventEmitter object
+
+  @Output()
+  onSendRequest = new EventEmitter<User>();
+
+ here 
+  onSendRequest is Name of the Event- Custom Event
+  EventEmitter is Object used to broadcast/send data to the Parent 
+  @Output is used to send data to the Parent where ever the event attached.
+
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { User } from './user.type';
+import { Observable } from 'rxjs'
+
+@Component({
+  selector: 'app-userslist',
+  templateUrl: './userslist.component.html',
+  styles: [
+  ]
+})
+export class UserslistComponent implements OnInit {
+  @Input()
+  users!: Observable<User[]>
+  @Input()
+  title: string = ''
+  selectedUser!: User
+
+  @Input()
+  status!: string
+  @Input()
+  loading!: boolean
+
+  //Event Emitter Object
+  @Output()
+  onSendRequest = new EventEmitter<User>();
+
+  constructor() { }
+
+  ngOnInit(): void {
+  }
+  //Event Listener
+  onSelect(user: User) {
+    console.log(user)
+    this.selectedUser = user
+  }
+  //send data to the parent component
+  sendUser() {
+    let user:User = {
+      id: Math.random(),
+      name: 'foo',
+      date: new Date(),
+      points: 9888.8777
+    }
+    this.onSendRequest.emit(user)
+  }
+
+}
+
+Step 2:Parent Component - We listen for event called "onSendRequest"
+
+Note: $event is global reference variable which holds current DOM object's Event Object.
+
+<div class="container">
+    <h1>User Page</h1>
+    <!-- Props pattern lefside is propName and right side is instance variable Name 
+        any object can be passed as prop
+    -->
+   <app-userslist [users]="users" 
+    title="User Details" 
+    [loading]="loading" 
+    [status]="status"  (onSendRequest)="getUser($event)"  ></app-userslist>
+    <h4>{{message}}</h4>
+
+</div>
+
+import { Component, OnInit } from '@angular/core';
+import { User } from './user.type';
+import { Observable } from 'rxjs'
+import { UsersService } from './users.service';
+
+@Component({
+  selector: 'app-users',
+  templateUrl: './users.component.html',
+  // styles: [`
+  //   h1 {
+  //     color:'blue'
+  //   }`
+  // ]
+  styleUrls: ['user.component.css']
+})
+export class UsersComponent implements OnInit {
+
+  // users!:Array<User>
+  users!: Observable<User[]>
+
+  loading: boolean = true;
+  status: string = "loading....."
+
+  user!: User
+
+  message: string = ""
+
+  constructor(private userService: UsersService) { }
+
+
+  ngOnInit(): void {
+    //console.log(this.userService.getUsers())
+    // this.userService.getUsers().subscribe({
+    //   next: users => {
+    //     console.log(users)
+    //     this.users = users
+    //   }
+    // })
+    //todo: remove this once if you test the code
+    // setTimeout(() => {
+    //   this.users = this.userService.getUsers()
+    //   this.loading = !this.loading;
+    // }, 5000)
+    this.users = this.userService.getUsers()
+    this.loading = !this.loading;
+  }
+  getUser(user: User) {
+    console.log('Parent  ', user)
+    this.userService.save(user).subscribe({
+      next: user => {
+        this.message = 'successfully added'
+      },
+      error: err => {
+        console.log('User not added', err)
+      }
+    })
+  }
+}
+
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http'
+import { Observable, catchError, of } from 'rxjs'
+import { User } from './user.type';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class UsersService {
+  url = "http://localhost:3000"
+  constructor(private http: HttpClient) { }
+
+  getUsers(): Observable<User[]> {
+    return this.http.get<User[]>(`${this.url}/users`).pipe(
+      //catchError and convert into proper response
+      //catchError(err => of<User[]>([{ id: 0, name: 'test' }]))
+      catchError(this.handleError<User[]>('getUsers', [{ id: 0, name: 'test' }]))
+    )
+  }
+  save(user: User):Observable<User> {
+    console.log('user posted in sevice layer', user)
+    return this.http.post<User>(`${this.url}/users`, user).pipe(
+      catchError(this.handleError<User>('Save is Called'))
+    )
+  }
+
+  //handle error Api
+  private handleError<T>(operation = 'operation', result?: T) {
+    //return function
+    return (error: any): Observable<T> => {
+      console.log(error)
+      return of(result as T)
+    }
+  }
+
+}
 
 
 
