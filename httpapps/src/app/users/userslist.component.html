@@ -19,6 +19,32 @@
   </div>
 </ng-template>
 <div>
-  <h3>User Form</h3>
-  <button (click)="sendUser()" class="btn btn-success">Submit</button>
+  <!-- <h1 #myheading>UserFOrm</h1> -->
+  <!-- <button (click)="sendUser()" class="btn btn-success">Submit</button> -->
+  <div class="container">
+    <!-- <h3>{{myheading.innerHTML}}</h3> -->
+    <h3>User Form</h3>
+    <!-- Todo: remove this once form is over -->
+    {{user | json}}
+    <form #userForm="ngForm" (ngSubmit)="sendUser()">
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input [(ngModel)]="user.name" name="name" #errorMsg1="ngModel" type="text" class="form-control" id="name"
+          required>
+      </div>
+      <!-- Validation Block -->
+      <div [hidden]="errorMsg1.valid || errorMsg1.pristine" class="alert alert-danger">
+        Name is required
+      </div>
+      <div class="form-group">
+        <label for="points">points</label>
+        <input [(ngModel)]="user.points" #errorMsg2="ngModel" name="points" type="number" class="form-control" id="points" required>
+      </div>
+      <div [hidden]="errorMsg2.valid || errorMsg2.pristine" class="alert alert-danger">
+        Points is required
+      </div>
+      <button type="submit" [disabled]="!userForm.form.valid" class="btn btn-success">Submit</button>
+
+    </form>
+  </div>
 </div>

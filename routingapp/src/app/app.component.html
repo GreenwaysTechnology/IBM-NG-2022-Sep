@@ -1,0 +1,23 @@
+<div class="container">
+    <h1 class="text-center">Routing App</h1>
+    <hr>
+    <!-- Traditionally displayed -->
+    <!-- <app-home></app-home>
+    <app-contact></app-contact> -->
+    <!-- With routing -->
+    <nav>
+        <ul>
+            <li><a routerLinkActive="active" routerLink="home">Home</a></li>
+            <li><a routerLinkActive="active" routerLink="contact">Contact</a></li>
+            <li><a routerLinkActive="active" routerLink="users">Users</a></li>
+            <li><a routerLinkActive="active" routerLink="products">Products</a></li>
+            <li><a routerLinkActive="active" routerLink="customers">Customers</a></li>
+            <li><a routerLinkActive="active" routerLink="orders">Orders</a></li>
+            <li><a routerLinkActive="active" routerLink="dashboard">Dashboard</a></li>
+
+        </ul>
+    </nav>
+    <hr>
+    <router-outlet></router-outlet>
+
+</div>

@@ -5,6 +5,7 @@ import { HttpClientModule } from '@angular/common/http'
 import { UtilModule } from '../util/util.module';
 import { UserslistComponent } from './userslist.component';
 import { UsersformComponent } from './usersform.component';
+import { FormsModule } from '@angular/forms';
 
 
 
@@ -15,7 +16,7 @@ import { UsersformComponent } from './usersform.component';
     UsersformComponent
   ],
   imports: [
-    CommonModule, HttpClientModule,UtilModule
+    CommonModule, HttpClientModule,UtilModule,FormsModule
   ],
   exports: [
     UsersComponent,
